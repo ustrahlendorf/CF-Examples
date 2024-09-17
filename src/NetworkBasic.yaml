@@ -47,7 +47,6 @@ Parameters:
   InstanceType:
     Description: EC2 instance type
     Type: String
-    Default: t3.micro
 
 Resources:
   LabVPC:
