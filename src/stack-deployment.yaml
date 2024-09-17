@@ -1,3 +1,6 @@
 template-file-path: src/NetworkBasic.yaml
 parameters: {}
-tags: {}
+tags: {
+  Environment: dev,
+  Project: NetworkBasic
+}

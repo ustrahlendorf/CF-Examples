@@ -1,61 +1,60 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: template which builds VPC, supporting resources, a basic
-  networking structure, and some Security groups for use in later tasks.
+Description: template which builds VPC, supporting resources, a basic networking
+  structure, and some Security groups for use in later tasks.
 Parameters:
   VPCCIDR:
     Description: CIDR Block for VPC
     Type: String
     Default: 10.0.0.0/16
     AllowedValues:
-    - 10.0.0.0/16
+      - 10.0.0.0/16
   PublicSubnet1Param:
     Description: Public Subnet 1
     Type: String
     Default: 10.0.0.0/24
     AllowedValues:
-    - 10.0.0.0/24
+      - 10.0.0.0/24
   PublicSubnet2Param:
     Description: Public Subnet 2
     Type: String
     Default: 10.0.1.0/24
     AllowedValues:
-    - 10.0.1.0/24
+      - 10.0.1.0/24
   AppSubnet1Param:
     Description: App Subnet 1
     Type: String
     Default: 10.0.2.0/24
     AllowedValues:
-    - 10.0.2.0/24
+      - 10.0.2.0/24
   AppSubnet2Param:
     Description: App Subnet 2
     Type: String
     Default: 10.0.3.0/24
     AllowedValues:
-    - 10.0.3.0/24
+      - 10.0.3.0/24
   DatabaseSubnet1Param:
     Description: Private Subnet 1
     Type: String
     Default: 10.0.4.0/24
     AllowedValues:
-    - 10.0.4.0/24
+      - 10.0.4.0/24
   DatabaseSubnet2Param:
     Description: Private Subnet 2
     Type: String
     Default: 10.0.5.0/24
     AllowedValues:
-    - 10.0.5.0/24
+      - 10.0.5.0/24
 Resources:
   LabVPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock:
-        Ref: VPCCIDR
+      CidrBlock: !Ref VPCCIDR
       EnableDnsSupport: true
       EnableDnsHostnames: true
       InstanceTenancy: default
       Tags:
-      - Key: Name
-        Value: LabVPC
+        - Key: Name
+          Value: LabVPC
     Metadata:
       SamResourceId: LabVPC
   LabInternetGateway:
@@ -65,24 +64,18 @@ Resources:
   AttachGateway:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
-      VpcId:
-        Ref: LabVPC
-      InternetGatewayId:
-        Ref: LabInternetGateway
+      VpcId: !Ref LabVPC
+      InternetGatewayId: !Ref LabInternetGateway
     Metadata:
       SamResourceId: AttachGateway
   NATGateway1:
     Type: AWS::EC2::NatGateway
     Properties:
-      AllocationId:
-        Fn::GetAtt:
-        - ElasticIPAddress1
-        - AllocationId
-      SubnetId:
-        Ref: PublicSubnet1
+      AllocationId: !GetAtt ElasticIPAddress1.AllocationId
+      SubnetId: !Ref PublicSubnet1
       Tags:
-      - Key: Name
-        Value: NATGateway1
+        - Key: Name
+          Value: NATGateway1
     Metadata:
       SamResourceId: NATGateway1
   ElasticIPAddress1:
@@ -94,15 +87,11 @@ Resources:
   NATGateway2:
     Type: AWS::EC2::NatGateway
     Properties:
-      AllocationId:
-        Fn::GetAtt:
-        - ElasticIPAddress2
-        - AllocationId
-      SubnetId:
-        Ref: PublicSubnet2
+      AllocationId: !GetAtt ElasticIPAddress2.AllocationId
+      SubnetId: !Ref PublicSubnet2
       Tags:
-      - Key: Name
-        Value: NATGateway2
+        - Key: Name
+          Value: NATGateway2
     Metadata:
       SamResourceId: NATGateway2
   ElasticIPAddress2:
@@ -114,310 +103,258 @@ Resources:
   PublicSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: LabVPC
-      CidrBlock:
-        Ref: PublicSubnet1Param
+      VpcId: !Ref LabVPC
+      CidrBlock: !Ref PublicSubnet1Param
       MapPublicIpOnLaunch: true
-      AvailabilityZone:
-        Fn::Select:
+      AvailabilityZone: !Select
         - '0'
-        - Fn::GetAZs: ''
+        - !GetAZs ''
       Tags:
-      - Key: Name
-        Value: PublicSubnet1
+        - Key: Name
+          Value: PublicSubnet1
     Metadata:
       SamResourceId: PublicSubnet1
   PublicSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: LabVPC
-      CidrBlock:
-        Ref: PublicSubnet2Param
+      VpcId: !Ref LabVPC
+      CidrBlock: !Ref PublicSubnet2Param
       MapPublicIpOnLaunch: true
-      AvailabilityZone:
-        Fn::Select:
+      AvailabilityZone: !Select
         - '1'
-        - Fn::GetAZs: ''
+        - !GetAZs ''
       Tags:
-      - Key: Name
-        Value: PublicSubnet2
+        - Key: Name
+          Value: PublicSubnet2
     Metadata:
       SamResourceId: PublicSubnet2
   AppSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: LabVPC
-      CidrBlock:
-        Ref: AppSubnet1Param
+      VpcId: !Ref LabVPC
+      CidrBlock: !Ref AppSubnet1Param
       MapPublicIpOnLaunch: false
-      AvailabilityZone:
-        Fn::Select:
+      AvailabilityZone: !Select
         - '0'
-        - Fn::GetAZs: ''
+        - !GetAZs ''
       Tags:
-      - Key: Name
-        Value: AppSubnet1
+        - Key: Name
+          Value: AppSubnet1
     Metadata:
       SamResourceId: AppSubnet1
   AppSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: LabVPC
-      CidrBlock:
-        Ref: AppSubnet2Param
+      VpcId: !Ref LabVPC
+      CidrBlock: !Ref AppSubnet2Param
       MapPublicIpOnLaunch: false
-      AvailabilityZone:
-        Fn::Select:
+      AvailabilityZone: !Select
         - '1'
-        - Fn::GetAZs: ''
+        - !GetAZs ''
       Tags:
-      - Key: Name
-        Value: AppSubnet2
+        - Key: Name
+          Value: AppSubnet2
     Metadata:
       SamResourceId: AppSubnet2
   DatabaseSubnet1:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: LabVPC
-      CidrBlock:
-        Ref: DatabaseSubnet1Param
+      VpcId: !Ref LabVPC
+      CidrBlock: !Ref DatabaseSubnet1Param
       MapPublicIpOnLaunch: false
-      AvailabilityZone:
-        Fn::Select:
+      AvailabilityZone: !Select
         - '0'
-        - Fn::GetAZs: ''
+        - !GetAZs ''
       Tags:
-      - Key: Name
-        Value: DatabaseSubnet1
+        - Key: Name
+          Value: DatabaseSubnet1
     Metadata:
       SamResourceId: DatabaseSubnet1
   DatabaseSubnet2:
     Type: AWS::EC2::Subnet
     Properties:
-      VpcId:
-        Ref: LabVPC
-      CidrBlock:
-        Ref: DatabaseSubnet2Param
+      VpcId: !Ref LabVPC
+      CidrBlock: !Ref DatabaseSubnet2Param
       MapPublicIpOnLaunch: false
-      AvailabilityZone:
-        Fn::Select:
+      AvailabilityZone: !Select
         - '1'
-        - Fn::GetAZs: ''
+        - !GetAZs ''
       Tags:
-      - Key: Name
-        Value: DatabaseSubnet2
+        - Key: Name
+          Value: DatabaseSubnet2
     Metadata:
       SamResourceId: DatabaseSubnet2
   PublicRouteTable:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId:
-        Ref: LabVPC
+      VpcId: !Ref LabVPC
       Tags:
-      - Key: Name
-        Value: PublicRouteTable
+        - Key: Name
+          Value: PublicRouteTable
     Metadata:
       SamResourceId: PublicRouteTable
   PrivateRouteTableAZ1:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId:
-        Ref: LabVPC
+      VpcId: !Ref LabVPC
       Tags:
-      - Key: Name
-        Value: PrivateRouteTableAZ1
+        - Key: Name
+          Value: PrivateRouteTableAZ1
     Metadata:
       SamResourceId: PrivateRouteTableAZ1
   PrivateRouteTableAZ2:
     Type: AWS::EC2::RouteTable
     Properties:
-      VpcId:
-        Ref: LabVPC
+      VpcId: !Ref LabVPC
       Tags:
-      - Key: Name
-        Value: PrivateRouteTableAZ2
+        - Key: Name
+          Value: PrivateRouteTableAZ2
     Metadata:
       SamResourceId: PrivateRouteTableAZ2
   PublicRoute:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId:
-        Ref: PublicRouteTable
-      DestinationCidrBlock: '0.0.0.0/0'
-      GatewayId:
-        Ref: LabInternetGateway
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref LabInternetGateway
     Metadata:
       SamResourceId: PublicRoute
   PrivateRouteAZ1:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId:
-        Ref: PrivateRouteTableAZ1
-      DestinationCidrBlock: '0.0.0.0/0'
-      NatGatewayId:
-        Ref: NATGateway1
+      RouteTableId: !Ref PrivateRouteTableAZ1
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGateway1
     Metadata:
       SamResourceId: PrivateRouteAZ1
   PrivateRouteAZ2:
     Type: AWS::EC2::Route
     Properties:
-      RouteTableId:
-        Ref: PrivateRouteTableAZ2
-      DestinationCidrBlock: '0.0.0.0/0'
-      NatGatewayId:
-        Ref: NATGateway2
+      RouteTableId: !Ref PrivateRouteTableAZ2
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NATGateway2
     Metadata:
       SamResourceId: PrivateRouteAZ2
   PublicSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId:
-        Ref: PublicSubnet1
-      RouteTableId:
-        Ref: PublicRouteTable
+      SubnetId: !Ref PublicSubnet1
+      RouteTableId: !Ref PublicRouteTable
     Metadata:
       SamResourceId: PublicSubnet1RouteTableAssociation
   PublicSubnet2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId:
-        Ref: PublicSubnet2
-      RouteTableId:
-        Ref: PublicRouteTable
+      SubnetId: !Ref PublicSubnet2
+      RouteTableId: !Ref PublicRouteTable
     Metadata:
       SamResourceId: PublicSubnet2RouteTableAssociation
   AppSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId:
-        Ref: AppSubnet1
-      RouteTableId:
-        Ref: PrivateRouteTableAZ1
+      SubnetId: !Ref AppSubnet1
+      RouteTableId: !Ref PrivateRouteTableAZ1
     Metadata:
       SamResourceId: AppSubnet1RouteTableAssociation
   AppSubnet2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId:
-        Ref: AppSubnet2
-      RouteTableId:
-        Ref: PrivateRouteTableAZ2
+      SubnetId: !Ref AppSubnet2
+      RouteTableId: !Ref PrivateRouteTableAZ2
     Metadata:
       SamResourceId: AppSubnet2RouteTableAssociation
   DatabaseSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId:
-        Ref: DatabaseSubnet1
-      RouteTableId:
-        Ref: PrivateRouteTableAZ1
+      SubnetId: !Ref DatabaseSubnet1
+      RouteTableId: !Ref PrivateRouteTableAZ1
     Metadata:
       SamResourceId: DatabaseSubnet1RouteTableAssociation
   DatabaseSubnet2RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      SubnetId:
-        Ref: DatabaseSubnet2
-      RouteTableId:
-        Ref: PrivateRouteTableAZ2
+      SubnetId: !Ref DatabaseSubnet2
+      RouteTableId: !Ref PrivateRouteTableAZ2
     Metadata:
       SamResourceId: DatabaseSubnet2RouteTableAssociation
   AppInstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security Group allowing HTTP traffic for lab instances
-      VpcId:
-        Ref: LabVPC
+      VpcId: !Ref LabVPC
       Tags:
-      - Key: Name
-        Value: AppInstanceSecurityGroup
+        - Key: Name
+          Value: AppInstanceSecurityGroup
       SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
-        CidrIp: '0.0.0.0/0'
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
     Metadata:
       SamResourceId: AppInstanceSecurityGroup
   RDSSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security Group allowing RDS instances to have internet traffic
-      VpcId:
-        Ref: LabVPC
+      VpcId: !Ref LabVPC
       Tags:
-      - Key: Name
-        Value: RDSSecurityGroup
+        - Key: Name
+          Value: RDSSecurityGroup
     Metadata:
       SamResourceId: RDSSecurityGroup
   EFSMountTargetSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Security Group allowing traffic between EFS Mount Targets
-        and Amazon EC2 instances
-      VpcId:
-        Ref: LabVPC
+      GroupDescription: Security Group allowing traffic between EFS Mount Targets and
+        Amazon EC2 instances
+      VpcId: !Ref LabVPC
       Tags:
-      - Key: Name
-        Value: EFSMountTargetSecurityGroup
+        - Key: Name
+          Value: EFSMountTargetSecurityGroup
       SecurityGroupIngress:
-      - IpProtocol: tcp
-        SourceSecurityGroupId:
-          Ref: AppInstanceSecurityGroup
-        FromPort: 80
-        ToPort: 80
+        - IpProtocol: tcp
+          SourceSecurityGroupId: !Ref AppInstanceSecurityGroup
+          FromPort: 80
+          ToPort: 80
     Metadata:
       SamResourceId: EFSMountTargetSecurityGroup
 Outputs:
   Region:
     Description: Lab Region
-    Value:
-      Ref: AWS::Region
+    Value: !Ref AWS::Region
   DatabaseSubnet1CIDR:
     Description: CIDR block for the DB Subnet in AZ a
-    Value:
-      Ref: DatabaseSubnet1Param
+    Value: !Ref DatabaseSubnet1Param
   DatabaseSubnet2CIDR:
     Description: CIDR block for the DB Subnet in AZ b
-    Value:
-      Ref: DatabaseSubnet2Param
+    Value: !Ref DatabaseSubnet2Param
   DatabaseSubnet1ID:
     Description: The Subnet ID for the DB Subnet in AZ a
-    Value:
-      Ref: DatabaseSubnet1
+    Value: !Ref DatabaseSubnet1
     Export:
       Name: CfnDatabaseSubnet1ID
   DatabaseSubnet2ID:
     Description: The Subnet ID for the DB Subnet in AZ b
-    Value:
-      Ref: DatabaseSubnet2
+    Value: !Ref DatabaseSubnet2
     Export:
       Name: CfnDatabaseSubnet2ID
   AppInstanceSecurityGroupID:
     Description: The Security Group ID for the Lab Instance Security Group
-    Value:
-      Ref: AppInstanceSecurityGroup
+    Value: !Ref AppInstanceSecurityGroup
     Export:
       Name: CfnAppInstanceSecurityGroupID
   EFSMountTargetSecurityGroupID:
     Description: The Security Group ID for the Lab EFS Mount Target
-    Value:
-      Ref: EFSMountTargetSecurityGroup
+    Value: !Ref EFSMountTargetSecurityGroup
     Export:
       Name: CfnEFSMountTargetSecurityGroupID
   RDSSecurityGroupID:
     Description: The Security Group ID for the Lab RDS cluster
-    Value:
-      Ref: RDSSecurityGroup
+    Value: !Ref RDSSecurityGroup
     Export:
       Name: CfnRDSSecurityGroupID
   VPCID:
     Description: The VPC ID for the lab
-    Value:
-      Ref: LabVPC
+    Value: !Ref LabVPC
     Export:
       Name: CfnVPCID
