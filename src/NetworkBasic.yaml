@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: Lab7 Task 1 template which builds VPC, supporting resources, a basic
+Description: template which builds VPC, supporting resources, a basic
   networking structure, and some Security groups for use in later tasks.
 Parameters:
   VPCCIDR:
@@ -390,34 +390,34 @@ Outputs:
     Value:
       Ref: DatabaseSubnet1
     Export:
-      Name: DatabaseSubnet1ID
+      Name: CfnDatabaseSubnet1ID
   DatabaseSubnet2ID:
     Description: The Subnet ID for the DB Subnet in AZ b
     Value:
       Ref: DatabaseSubnet2
     Export:
-      Name: DatabaseSubnet2ID
+      Name: CfnDatabaseSubnet2ID
   AppInstanceSecurityGroupID:
     Description: The Security Group ID for the Lab Instance Security Group
     Value:
       Ref: AppInstanceSecurityGroup
     Export:
-      Name: AppInstanceSecurityGroupID
+      Name: CfnAppInstanceSecurityGroupID
   EFSMountTargetSecurityGroupID:
     Description: The Security Group ID for the Lab EFS Mount Target
     Value:
       Ref: EFSMountTargetSecurityGroup
     Export:
-      Name: EFSMountTargetSecurityGroupID
+      Name: CfnEFSMountTargetSecurityGroupID
   RDSSecurityGroupID:
     Description: The Security Group ID for the Lab RDS cluster
     Value:
       Ref: RDSSecurityGroup
     Export:
-      Name: RDSSecurityGroupID
+      Name: CfnRDSSecurityGroupID
   VPCID:
     Description: The VPC ID for the lab
     Value:
       Ref: LabVPC
     Export:
-      Name: VPCID
+      Name: CfnVPCID
