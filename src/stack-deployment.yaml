@@ -1,5 +1,7 @@
 template-file-path: src/NetworkBasic.yaml
-parameters: {}
+parameters: {
+  InstanceType: "t2.medium"
+}
 tags: {
   Environment: dev,
   Project: NetworkBasic
