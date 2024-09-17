@@ -44,6 +44,11 @@ Parameters:
     Default: 10.0.5.0/24
     AllowedValues:
       - 10.0.5.0/24
+  InstanceType:
+    Description: EC2 instance type
+    Type: String
+    Default: t3.micro
+
 Resources:
   LabVPC:
     Type: AWS::EC2::VPC
@@ -358,3 +363,8 @@ Outputs:
     Value: !Ref LabVPC
     Export:
       Name: CfnVPCID
+  INSTANCETYPE:
+    Description: Instance Type
+    Value: !Ref InstanceType
+    Export:
+      Name: CfnInstanceType
