@@ -1,6 +1,6 @@
 template-file-path: src/NetworkBasic.yaml
 parameters: {
-  InstanceType: "t3.nano"
+  InstanceType: "t3.medium"
 }
 tags: {
   Environment: dev,
