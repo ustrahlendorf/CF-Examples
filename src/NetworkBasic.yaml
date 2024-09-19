@@ -281,47 +281,6 @@ Resources:
       RouteTableId: !Ref PrivateRouteTableAZ2
     Metadata:
       SamResourceId: DatabaseSubnet2RouteTableAssociation
-  AppInstanceSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security Group allowing HTTP traffic for lab instances
-      VpcId: !Ref LabVPC
-      Tags:
-        - Key: Name
-          Value: AppInstanceSecurityGroup
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-    Metadata:
-      SamResourceId: AppInstanceSecurityGroup
-  RDSSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security Group allowing RDS instances to have internet traffic
-      VpcId: !Ref LabVPC
-      Tags:
-        - Key: Name
-          Value: RDSSecurityGroup
-    Metadata:
-      SamResourceId: RDSSecurityGroup
-  EFSMountTargetSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security Group allowing traffic between EFS Mount Targets and
-        Amazon EC2 instances
-      VpcId: !Ref LabVPC
-      Tags:
-        - Key: Name
-          Value: EFSMountTargetSecurityGroup
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          SourceSecurityGroupId: !Ref AppInstanceSecurityGroup
-          FromPort: 80
-          ToPort: 80
-    Metadata:
-      SamResourceId: EFSMountTargetSecurityGroup
 
 Outputs:
   Region:
